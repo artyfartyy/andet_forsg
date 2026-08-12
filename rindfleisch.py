@@ -44,6 +44,10 @@ def rindfleisch(): # the game itself + encouraging messages
                             print(f"""
                             It took you {length} seconds to write Rindfleisch 10 times.""")
 
+                            time.time()
+                            time.sleep(1.5)
+                            time.time()
+
                             hmm = input("Add score to leaderboard? (y/n) ")
                             hmm = hmm.lower()
                             if hmm in ["y", "yes", "yurr", "ye", "ы", "rindfleisch"]:
@@ -84,7 +88,7 @@ def addtoleaderboard(name, length):
     with open("leaderboard.txt", "r") as bamhurg:
         lines = bamhurg.readlines()
 
-    lines.sort(key = lambda line: float(line.split()[1]))
+    lines.sort(key = lambda line: float(line.split()[-1]))
 
     with open("leaderboard.txt", "w") as ron:
          ron.writelines(lines)
@@ -92,6 +96,16 @@ def addtoleaderboard(name, length):
 
 
     print("Score added.")
+
+
+def updateleaderboard():
+     with open("leaderboard.txt", "r") as bamhurg:
+             lines = bamhurg.readlines()
+     
+     lines.sort(key = lambda line: float(line.split()[-1]))
+     
+     with open("leaderboard.txt", "w") as ron:
+              ron.writelines(lines)
 
 
 def resetleaderboard():
@@ -123,6 +137,9 @@ match æ: # if/else is still more spiritually fulfilling imo, I just had to try 
 
     case "e":
         quit()
+
+    case "update":
+        updateleaderboard()
             
     case _:
         print("Fuck you.")
