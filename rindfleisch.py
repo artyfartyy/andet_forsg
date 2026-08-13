@@ -1,6 +1,7 @@
 import time
 import random
 import threading as t
+from invalidinput import invalidinp
 
 
 def rindfleisch(): # the game itself + encouraging messages
@@ -73,47 +74,135 @@ def rindfleisch(): # the game itself + encouraging messages
 #        global burger
 #        burger = 69420   - here I tried to make the game stop itself after 60 seconds, will retry at another point
         
-def viewleaderboard():
-    hamburg = open("leaderboard.txt", "r")
-    print("")
-    print(hamburg.read())
-    hamburg.close()
+def viewleaderboard(): # prints out a numerated leaderboard
+    with open("leaderboard.txt", "r") as hamburg:
+        print("")
+        lines = hamburg.readlines()
+        for number, entry in enumerate(lines, start=1):
+            if number <= 3:
+                print(f"{number}! {entry}")
+            else:
+                print(f"{number}. {entry}")
     
 
-def addtoleaderboard(name, length):
+def test(): # prints amount of entries in leaderboard
+    with open("leaderboard.txt", "r") as hamburg:
+        strc = hamburg.readlines()
+        print(len(strc))
+
+
+def cheataddtoleaderboard(): # manually add a name and a time record to the board
+    with open("leaderboard.txt", "a") as hamburg:
+          naem = str(input("name: "))
+          time = float(input("time: "))
+          hamburg.write(f"{naem}, {time} \n")
+    with open("leaderboard.txt", "r") as bamhurg:
+            lines = bamhurg.readlines()
+
+            lines.sort(key = lambda line: (line.split()[-1])) # according to chatgpt, the "-1" was the cause of my suffering all along
+
+            maxentries = 10
+            lines = lines[:maxentries]
+            
+    with open("leaderboard.txt", "w") as ron:
+          ron.writelines(lines)
+            
+            
+    
+    #with open("leaderboard.txt", "w") as ron:
+            #ron.writelines(lines)
+             
+    
+    #with open("leaderboard.txt", "w") as hrskæg:
+    #        for number, entry in enumerate(lines, start=1):
+    #            if number <= 3:
+    #                hrskæg.write(f"{number}! {entry}")             this is so horrible now that I look back at it
+    #            else:
+    #                hrskæg.write(f"{number}. {entry}")
+    
+
+def massadd(): # adds 10 unnumerated artys to the leaderboard
+     # to numerate artys, add another name with cheataddtoleaderboard()
+     with open("leaderboard.txt", "a") as hamburg:
+                for i in range(10):
+                    time = random.randint(1, 69)
+                    hamburg.write(f"arty, {time} \n")
+     with open("leaderboard.txt", "r") as bamhurg:
+                 lines = bamhurg.readlines()
+                 lines.sort(key = lambda line: float(line.split()[-1]))
+     
+                 
+         
+     with open("leaderboard.txt", "w") as ron:
+                 ron.writelines(lines)
+                  
+     with open("leaderboard.txt", "r") as burh:
+                     strc = burh.readlines()
+                     if len(strc) > 10:
+                         strc.pop(10)
+                     else:
+                         pass
+     #with open("leaderboard.txt", "w") as hrskæg:
+     #           for number, entry in enumerate(lines, start=1):
+     #               if number <= 3:
+     #                   hrskæg.write(f"{number}! {entry}")
+     #               else:
+     #                   hrskæg.write(f"{number}. {entry}")
+    
+         
+def addtoleaderboard(name, length): # adds name to leaderboard after a game
     with open("leaderboard.txt", "a") as hamburg: # apparently, this saves me of a "hamburg.close()"
         hamburg.write(f"{name}, {length} \n")
+
     
 
     with open("leaderboard.txt", "r") as bamhurg:
         lines = bamhurg.readlines()
+        lines.sort(key = lambda line: float(line.split()[-1]))
 
-    lines.sort(key = lambda line: float(line.split()[-1]))
+        maxentries = 10
+        lines = lines[:maxentries]
 
     with open("leaderboard.txt", "w") as ron:
-         ron.writelines(lines)
+        ron.writelines(lines)
          
-
+    
+    
+    #with open("leaderboard.txt", "w") as hrskæg:
+        #for number, prst in enumerate(strc, start=1):
+            #hrskæg.write(f"{number}. {prst}")
 
     print("Score added.")
 
 
 def updateleaderboard():
-     with open("leaderboard.txt", "r") as bamhurg:
+    with open("leaderboard.txt", "r") as bamhurg:
              lines = bamhurg.readlines()
+             lines.sort(key = lambda line: float(line.split()[-1]))
      
-     lines.sort(key = lambda line: float(line.split()[-1]))
-     
-     with open("leaderboard.txt", "w") as ron:
-              ron.writelines(lines)
+    with open("leaderboard.txt", "w") as ron:
+             ron.writelines(lines)
+              
+    with open("leaderboard.txt", "r") as burh:
+                 strc = burh.readlines()
+                 if len(strc) > 10:
+                     strc.pop(10)
+                 else:
+                     pass
+         
+    with open("leaderboard.txt", "w") as hrskæg:
+             hrskæg.writelines(strc)
 
 
-def resetleaderboard():
-    hamburg = open("leaderboard.txt", "w")
-    hamburg.close()
-    print("Ain't that a fact")
-    
-
+def resetleaderboard(): # for emergency/testing/ragequit purposes
+    areyousure = input("Are you sure? ")
+    areyousure = areyousure.lower()
+    if areyousure == "yes":
+        hamburg = open("leaderboard.txt", "w")
+        hamburg.close()
+        print("Ain't that a fact")
+    else:
+        quit()
 
 
 choosing = input("""
@@ -132,17 +221,26 @@ match æ: # if/else is still more spiritually fulfilling imo, I just had to try 
     case "l":
         viewleaderboard()
 
-    case "fuck this game and everyone playing it":
+    case æ if æ in ["fuck this game and everyone playing it"]:
         resetleaderboard()
 
     case "e":
         quit()
 
-    case "update":
+    case "Lorem ipsum dolor sit amet vinum rubrum dies irae dies illa solvet saechlum in favilla teste David cum Sybilla":
         updateleaderboard()
+
+    case "howmanyentries":
+          test()
+
+    case "thegreatleaderboardreplacement":
+          massadd()
+
+    case "add":
+          cheataddtoleaderboard()
             
     case _:
-        print("Fuck you.")
+        print(invalidinp())
     
 
 
