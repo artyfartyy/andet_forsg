@@ -1,7 +1,6 @@
 import time
 import random
 import threading as t
-from invalidinput import invalidinp
 
 
 def rindfleisch(): # the game itself + encouraging messages
@@ -49,10 +48,23 @@ def rindfleisch(): # the game itself + encouraging messages
                             time.sleep(1.5)
                             time.time()
 
+                            presence = False
                             hmm = input("Add score to leaderboard? (y/n) ")
                             hmm = hmm.lower()
                             if hmm in ["y", "yes", "yurr", "ye", "ы", "rindfleisch"]:
                                 name = input("Name: ")
+                                name = name.upper()
+
+                                with open("leaderboard.txt", "r") as hamburg:
+                                    hamburg.readlines()
+
+
+                                #if name in hamburg: # 13/08/2026 21:15 UTC +1: i'm TRYING to create an overwrite mechanic
+                                #    presence = True
+
+                                #else:
+                                #    pass
+                                
                                 addtoleaderboard(name, length)
                             else:
                                  pass
@@ -92,14 +104,30 @@ def test(): # prints amount of entries in leaderboard
 
 
 def cheataddtoleaderboard(): # manually add a name and a time record to the board
+    naem = str(input("name: "))
+    naem = naem.upper()
+    time = float(input("time: "))
+
+    with open("leaderboard.txt", "r") as fleisch:
+            butter = fleisch.readlines()
+            for i, entry in enumerate(butter):
+                if naem in entry:
+                    butter.pop(i)
+                    break
+                else:
+                     pass
+                
+    with open("leaderboard.txt", "w") as booh:
+          booh.writelines(butter)
+
     with open("leaderboard.txt", "a") as hamburg:
-          naem = str(input("name: "))
-          time = float(input("time: "))
           hamburg.write(f"{naem}, {time} \n")
+
+        
     with open("leaderboard.txt", "r") as bamhurg:
             lines = bamhurg.readlines()
 
-            lines.sort(key = lambda line: (line.split()[-1])) # according to chatgpt, the "-1" was the cause of my suffering all along
+            lines.sort(key = lambda line: float(line.split()[-1])) # according to chatgpt, the "-1" was the cause of my suffering all along
 
             maxentries = 10
             lines = lines[:maxentries]
@@ -136,12 +164,12 @@ def massadd(): # adds 10 unnumerated artys to the leaderboard
      with open("leaderboard.txt", "w") as ron:
                  ron.writelines(lines)
                   
-     with open("leaderboard.txt", "r") as burh:
-                     strc = burh.readlines()
-                     if len(strc) > 10:
-                         strc.pop(10)
-                     else:
-                         pass
+     #with open("leaderboard.txt", "r") as burh:
+                    # strc = burh.readlines()
+                    # if len(strc) > 10:
+                    #     strc.pop(10)
+                    # else:
+                    #     pass
      #with open("leaderboard.txt", "w") as hrskæg:
      #           for number, entry in enumerate(lines, start=1):
      #               if number <= 3:
@@ -151,6 +179,30 @@ def massadd(): # adds 10 unnumerated artys to the leaderboard
     
          
 def addtoleaderboard(name, length): # adds name to leaderboard after a game
+
+    
+    fleisch = open("leaderboard.txt", "r")
+    butter = fleisch.readlines()
+
+    for i, entry in enumerate(butter):
+            if name in entry:
+                aynrand = float(entry.split()[-1])
+                if aynrand > length:
+                    butter.pop(i)
+                    break
+                else: 
+                    print("Score not added. Do better next time.")
+                    quit()
+            else:
+                 pass
+    fleisch.close()
+
+    with open("leaderboard.txt", "w") as booh:
+             booh.writelines(butter)
+    
+
+
+
     with open("leaderboard.txt", "a") as hamburg: # apparently, this saves me of a "hamburg.close()"
         hamburg.write(f"{name}, {length} \n")
 
@@ -206,7 +258,7 @@ def resetleaderboard(): # for emergency/testing/ragequit purposes
 
 
 choosing = input("""
-    RINDFLEISCH NIGHT FUNKIN 1.1
+    RINDFLEISCH NIGHT FUNKIN 1.2
     PRESS 'ENTER' TO PLAY
     INPUT 'L' TO VIEW LEADERBOARD
     INPUT 'E' TO EXIT
@@ -238,9 +290,21 @@ match æ: # if/else is still more spiritually fulfilling imo, I just had to try 
 
     case "add":
           cheataddtoleaderboard()
+
+    case "massadd":
+            massadd()
+
+    case "print":
+          ghamburg = open("leaderboard.txt", "r")
+          glines = ghamburg.readlines()
+          print(glines)
+          print(len(glines))
+          ghamburg.close()
             
     case _:
-        print(invalidinp())
+        print("Invalid input.")
+
+    
     
 
 
